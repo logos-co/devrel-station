@@ -79,8 +79,6 @@ rfp: RFP-0XX
 title: Project name from the proposal
 team: Team or applicant name
 contact: handle (Discord), handle (Signal)
-reviewer: github-handle          # engineering reviewer for the delivery
-                                 # (a milestone's own `reviewer` overrides)
 proposal_issue: 123            # issue number in logos-co/rfp (proposal + discussion)
 delivery_repo: https://github.com/team/repo   # where the work lands (optional)
 accepted_date: 2026-01-01
@@ -99,7 +97,7 @@ milestones:
       taken from the proposal's completion criteria.
     links:                     # PRs / repos / docs submitted for review
       - https://github.com/logos-co/spel/pull/123
-    reviewer:                  # engineering reviewer, once assigned
+    reviewer:                  # engineering reviewer allocated to this milestone
     approved_date:
     payout_requested_date:
     paid_date:

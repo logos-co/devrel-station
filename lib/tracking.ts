@@ -153,7 +153,6 @@ export function loadTrackedProposals(): TrackedProposal[] {
         title: asString(data.title) ?? slug,
         team: asString(data.team) ?? "Unknown team",
         contact: asString(data.contact),
-        reviewer: asString(data.reviewer),
         proposal_issue: proposalIssue,
         proposal_url: proposalIssue
           ? `https://github.com/${RFP_REPO}/issues/${proposalIssue}`

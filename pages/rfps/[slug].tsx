@@ -306,16 +306,6 @@ export default function RfpDetail({
         </ul>
       </section>
 
-      {p.notes && (
-        <details className="mt-8">
-          <summary className="cursor-pointer text-xs uppercase tracking-widest text-ink-muted hover:text-ink">
-            Notes
-          </summary>
-          <div className="card mt-3 whitespace-pre-wrap px-6 py-5 text-sm leading-relaxed text-ink-secondary">
-            {p.notes}
-          </div>
-        </details>
-      )}
     </Layout>
   );
 }

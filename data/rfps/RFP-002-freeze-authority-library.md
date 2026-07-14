@@ -12,6 +12,7 @@ milestones:
     payout: 875
     duration: 4-6 days
     status: not_started
+    reviewer: danisharora099
     deliverables: >
       #[freeze_authority] / #[freeze_authority(auto)], #[require_not_frozen]
       and #[freeze_exempt] macro API design, FreezeConfig and per-account PDA
@@ -23,6 +24,7 @@ milestones:
     payout: 1750
     duration: 8-12 days
     status: not_started
+    reviewer: danisharora099
     deliverables: >
       All four annotations implemented in spel-framework-macros; supporting
       library crate with FreezeConfig and all five management instructions; PR
@@ -34,6 +36,7 @@ milestones:
     payout: 875
     duration: 4-6 days
     status: not_started
+    reviewer: danisharora099
     deliverables: >
       Full test suite covering frozen/unfrozen and per-account paths, CI green,
       README covering both freeze modes and annotation API, transaction size

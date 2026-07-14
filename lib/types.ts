@@ -40,6 +40,9 @@ export interface TrackedProposal {
   title: string;
   team: string;
   contact?: string;
+  // Engineering reviewer assigned to the delivery; a milestone-level
+  // `reviewer` overrides it for that milestone.
+  reviewer?: string;
   // Issue in RFP_REPO — the proposal thread, which also hosts milestone
   // discussion and engineering approvals.
   proposal_issue?: number;

@@ -219,6 +219,12 @@ export default function RfpDetail({
             <dd className="mt-0.5">{p.contact}</dd>
           </div>
         )}
+        {p.reviewer && (
+          <div>
+            <dt className="text-xs text-ink-muted">Reviewer</dt>
+            <dd className="mt-0.5 font-medium">{p.reviewer}</dd>
+          </div>
+        )}
         <div>
           <dt className="text-xs text-ink-muted">Accepted</dt>
           <dd className="mt-0.5 tabular-nums">{formatDate(p.accepted_date)}</dd>

@@ -32,50 +32,29 @@ limit (everything works unauthenticated too).
 
 ## RFP tracking — how it works
 
-There are two data sources:
-
-1. **`data/rfps/*.md` — the source of truth for delivery tracking.**
-   One file per *accepted* proposal, with structured milestones in YAML
-   frontmatter. Proposal issues on GitHub are free-form and inconsistent, so we
-   normalise each accepted proposal into this format once, at acceptance time.
-   See [`data/RFP_TEMPLATE.md`](data/RFP_TEMPLATE.md) for the template and the status
-   workflow.
-2. **The GitHub API — engineering reviews, fetched live.** Any comment on the
-   proposal issue whose first line starts with `Review M1:` (or `M1 review:`)
-   is pulled in and shown under that milestone, refreshed every minute.
+**`data/rfps/*.md` is the source of truth for delivery tracking.**
+One file per *accepted* proposal, with structured milestones in YAML
+frontmatter. Proposal issues on GitHub are free-form and inconsistent, so we
+normalise each accepted proposal into this format once, at acceptance time.
+See [`data/RFP_TEMPLATE.md`](data/RFP_TEMPLATE.md) for the template and the status
+workflow.
 
 ### Pages
 
 - **RFPs board (`/rfps`)** — stat tiles (active deliveries, milestones awaiting
-  engineering review, approved-but-unpaid amounts, paid vs committed), an
-  **Action needed** queue showing exactly who each item is waiting on
-  (engineering / DevRel / finance), and a table of all tracked deliveries.
-- **Delivery detail (`/rfps/<slug>`)** — per-milestone timeline with the
-  workflow strip (in progress → delivered → in review → approved → payout
-  requested → paid), payout amounts, engineering reviews, dates, and notes.
+  engineering review, approved-but-unpaid amounts, paid vs committed) and a
+  table of all tracked deliveries.
+- **Delivery detail (`/rfps/<slug>`)** — per-milestone cards with status,
+  payout, dates, allocated reviewer, deliverables, and links.
 
-### Reviewing from the dashboard (engineering)
+Review discussion itself happens on the proposal issue on GitHub (linked from
+the detail page header); when engineering approves a milestone there, update
+its `status` in the tracking file.
 
-Every milestone has a **discussion thread**: all comments on the delivery's
-**proposal issue in logos-co/rfp** whose first line references the milestone
-(`M1: …`, `Review M1: …`, `Review M1 — Approved`,
-`Review M1 — Changes requested: …`), shown chronologically. Commenters who
-are logos-co org members get a `logos-co` badge, so team voices are
-distinguishable from external ones. There is no separate tracking repo —
-the proposal thread is the record, reviews included.
-
-To take part without leaving the dashboard, click **Connect GitHub** (top
-right) and paste a
-[fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)
-scoped to **only `logos-co/rfp`** with **Issues: Read & write**. Each
-milestone then gets a compose box with three actions: **Approve**, **Request
-changes**, or plain **Comment**. Each posts an ordinary comment on the
-proposal issue under your own GitHub account and appears in the thread
-immediately. No database — the GitHub comment is the record.
-
-The token is stored only in your browser's localStorage and is sent only to
-`api.github.com` — the dashboard has no backend and never sees it. Use a short
-expiry and revoke it any time; `disconnect` removes it from the browser.
+The Connect GitHub token (used by the Feedback page) is stored only in your
+browser's localStorage and is sent only to `api.github.com` — the dashboard
+has no backend and never sees it. Use a short expiry and revoke it any time;
+`disconnect` removes it from the browser.
 
 ### The workflow (who does what)
 

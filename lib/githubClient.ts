@@ -2,7 +2,7 @@
 // (localStorage) and is sent only to api.github.com — the dashboard itself
 // stays a static site with no server-held secrets.
 import { FEEDBACK_LABEL, FEEDBACK_REPO } from "./config";
-import type { FeedbackIssue, MilestoneReview } from "./types";
+import type { FeedbackIssue } from "./types";
 
 const TOKEN_KEY = "rfp-tracker:github-token";
 export const TOKEN_EVENT = "rfp-tracker:token-changed";
@@ -86,43 +86,4 @@ export async function createFeedbackIssue(
   };
 }
 
-export type ReviewVerdict = "approved" | "changes_requested";
-
-export async function postReviewComment(
-  repo: string,
-  issue: number,
-  milestoneId: string,
-  text: string,
-  verdict?: ReviewVerdict,
-): Promise<MilestoneReview> {
-  // Verdicts and reviews use the "Review Mx" convention; a plain comment is
-  // just "Mx: …" so the thread reads like a forum.
-  const prefix =
-    verdict === "approved"
-      ? `Review ${milestoneId} — Approved`
-      : verdict === "changes_requested"
-        ? `Review ${milestoneId} — Changes requested`
-        : `${milestoneId}:`;
-  const body = text ? `${prefix}${verdict ? ":" : ""} ${text}` : prefix;
-  const c = (await gh(`/repos/${repo}/issues/${issue}/comments`, {
-    method: "POST",
-    body: JSON.stringify({ body }),
-  })) as {
-    body: string;
-    html_url: string;
-    created_at: string;
-    author_association?: string;
-    user: { login: string };
-  };
-  return {
-    milestone: milestoneId.toUpperCase(),
-    author: c.user.login,
-    body: c.body,
-    url: c.html_url,
-    created_at: c.created_at,
-    verdict: verdict ?? null,
-    kind: verdict ? "review" : "comment",
-    is_member: ["MEMBER", "OWNER"].includes(c.author_association ?? ""),
-  };
-}
 

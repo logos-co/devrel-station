@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import {
   fetchViewer,
   getStoredToken,
-  postReviewComment,
   storeToken,
   TOKEN_EVENT,
-  type ReviewVerdict,
 } from "@/lib/githubClient";
-import { FEEDBACK_REPO, RFP_REPO } from "@/lib/config";
-import type { MilestoneReview } from "@/lib/types";
+import { FEEDBACK_REPO } from "@/lib/config";
 
 // Resolves to the connected GitHub user, or null. Re-checks whenever the
 // stored token changes (connect/disconnect in any component).
@@ -96,8 +93,7 @@ export function GitHubConnect() {
               Generate a fine-grained PAT ↗
             </span>
             <br />
-            Repositories: <strong>{RFP_REPO}</strong>,{" "}
-            <strong>{FEEDBACK_REPO}</strong>
+            Repository: <strong>{FEEDBACK_REPO}</strong>
             <br />
             Permission: <strong>Issues — Read &amp; write</strong>
           </a>
@@ -135,74 +131,4 @@ export function GitHubConnect() {
   );
 }
 
-export function ReviewComposer({
-  repo,
-  issue,
-  milestoneId,
-  onPosted,
-}: {
-  repo: string;
-  issue: number;
-  milestoneId: string;
-  onPosted: (review: MilestoneReview) => void;
-}) {
-  const [text, setText] = useState("");
-  const [busy, setBusy] = useState<ReviewVerdict | "comment" | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const submit = async (verdict?: ReviewVerdict) => {
-    setBusy(verdict ?? "comment");
-    setError(null);
-    try {
-      onPosted(
-        await postReviewComment(repo, issue, milestoneId, text.trim(), verdict),
-      );
-      setText("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Posting failed");
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  return (
-    <div className="mt-3">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        rows={3}
-        placeholder={`${milestoneId} review notes — posted as a comment on the proposal issue`}
-        className="w-full rounded-lg border border-hairline bg-page px-3 py-2 text-sm"
-      />
-      {error && (
-        <p className="mt-1 text-xs" style={{ color: "var(--badge-critical-fg)" }}>
-          {error}
-        </p>
-      )}
-      <div className="mt-1 flex justify-end gap-2">
-        <button
-          onClick={() => submit()}
-          disabled={!text.trim() || busy !== null}
-          className="rounded-full px-3 py-1.5 text-xs text-ink-muted hover:text-ink disabled:opacity-50"
-        >
-          {busy === "comment" ? "Posting…" : "Comment"}
-        </button>
-        <button
-          onClick={() => submit("changes_requested")}
-          disabled={busy !== null}
-          className="rounded-full border border-hairline px-4 py-1.5 text-xs font-medium text-ink hover:border-ink disabled:opacity-50"
-        >
-          {busy === "changes_requested" ? "Posting…" : "Request changes"}
-        </button>
-        <button
-          onClick={() => submit("approved")}
-          disabled={busy !== null}
-          className="rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-page disabled:opacity-50"
-        >
-          {busy === "approved" ? "Posting…" : `Approve ${milestoneId}`}
-        </button>
-      </div>
-    </div>
-  );
-}
 

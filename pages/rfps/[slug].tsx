@@ -1,71 +1,12 @@
 import Link from "next/link";
-import { useState } from "react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Layout from "@/components/Layout";
-import { ReviewComposer, useGitHubUser } from "@/components/github";
 import { Meter, MilestoneBadge, OverallBadge } from "@/components/ui";
 import { loadTrackedProposals } from "@/lib/tracking";
-import { fetchMilestoneReviews } from "@/lib/github";
-import { RFP_REPO } from "@/lib/config";
 import { formatDate, formatUsd } from "@/lib/status";
-import type { Milestone, MilestoneReview, TrackedProposal } from "@/lib/types";
+import type { Milestone, TrackedProposal } from "@/lib/types";
 
-function ReviewCard({ r }: { r: MilestoneReview }) {
-  const long = r.body.length > 500;
-  const body = (
-    <div className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-ink-secondary">
-      {r.body}
-    </div>
-  );
-  return (
-    <li className="rounded-lg bg-inset px-4 py-3">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
-        <span className="font-medium text-ink">{r.author}</span>
-        {r.is_member && <span className="badge badge-progress">logos-co</span>}
-        {r.verdict === "approved" && (
-          <span className="badge badge-good">Approved</span>
-        )}
-        {r.verdict === "changes_requested" && (
-          <span className="badge badge-attention">Changes requested</span>
-        )}
-        <span>{formatDate(r.created_at)}</span>
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-accent hover:underline"
-        >
-          view on GitHub ↗
-        </a>
-      </div>
-      {long ? (
-        <details>
-          <summary className="mt-1 cursor-pointer text-sm text-ink-secondary">
-            {r.body.slice(0, 200).trimEnd()}… <span className="text-accent">show full review</span>
-          </summary>
-          {body}
-        </details>
-      ) : (
-        body
-      )}
-    </li>
-  );
-}
-
-function MilestoneCard({
-  m,
-  reviews,
-  discussion,
-  onReviewPosted,
-}: {
-  m: Milestone;
-  reviews: MilestoneReview[];
-  discussion: { repo: string; issue: number; url: string } | null;
-  onReviewPosted: (review: MilestoneReview) => void;
-}) {
-  const user = useGitHubUser();
-  const expectsReview = m.status === "delivered" || m.status === "in_review";
-  const canCompose = Boolean(user && discussion);
+function MilestoneCard({ m }: { m: Milestone }) {
   return (
     <li className="card px-6 py-5">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -133,73 +74,12 @@ function MilestoneCard({
           {m.notes}
         </p>
       )}
-
-      {(reviews.length > 0 || expectsReview || canCompose) && (
-        <div className="mt-4 border-t border-hairline pt-4">
-          <h4 className="text-xs font-semibold uppercase tracking-widest text-ink-muted">
-            Discussion{reviews.length > 0 && ` (${reviews.length})`}
-          </h4>
-          {reviews.length > 0 ? (
-            <ul className="mt-2 space-y-2">
-              {reviews.map((r) => (
-                <ReviewCard key={r.url} r={r} />
-              ))}
-            </ul>
-          ) : canCompose ? null : (
-            <p className="mt-2 text-sm text-ink-muted">
-              No discussion yet. Connect GitHub (top right) to comment from
-              here, or{" "}
-              {discussion ? (
-                <a
-                  href={discussion.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-accent hover:underline"
-                >
-                  comment on the proposal issue ↗
-                </a>
-              ) : (
-                "comment on the proposal issue"
-              )}{" "}
-              starting with{" "}
-              <code className="rounded bg-inset px-1 font-mono text-xs">
-                {m.id}:
-              </code>
-              .
-            </p>
-          )}
-          {canCompose && (
-            <ReviewComposer
-              repo={discussion!.repo}
-              issue={discussion!.issue}
-              milestoneId={m.id}
-              onPosted={onReviewPosted}
-            />
-          )}
-        </div>
-      )}
     </li>
   );
 }
 
-export default function RfpDetail({
-  proposal,
-  reviews,
-}: {
-  proposal: TrackedProposal;
-  reviews: MilestoneReview[] | null;
-}) {
+export default function RfpDetail({ proposal }: { proposal: TrackedProposal }) {
   const p = proposal;
-  // Reviews posted from this page appear immediately, ahead of the next ISR pass
-  const [posted, setPosted] = useState<MilestoneReview[]>([]);
-  const reviewsFor = (id: string) =>
-    [...(reviews ?? []), ...posted].filter(
-      (r) => r.milestone.toUpperCase() === id.toUpperCase(),
-    );
-  // Discussion and approvals live on the proposal issue in logos-co/rfp
-  const discussion = p.proposal_issue
-    ? { repo: RFP_REPO, issue: p.proposal_issue, url: p.proposal_url! }
-    : null;
   return (
     <Layout title={`${p.rfp} — ${p.title}`}>
       <Link href="/rfps" className="text-sm text-ink-muted hover:text-ink">
@@ -292,25 +172,12 @@ export default function RfpDetail({
         <h2 className="text-lg font-semibold tracking-tight">
           Milestones ({p.paid_count}/{p.milestones.length} paid)
         </h2>
-        {reviews === null && p.proposal_url && (
-          <p className="mt-2 text-xs text-ink-muted">
-            Couldn&apos;t fetch reviews from GitHub just now — they&apos;ll
-            reappear on the next refresh.
-          </p>
-        )}
         <ul className="mt-3 space-y-3">
           {p.milestones.map((m) => (
-            <MilestoneCard
-              key={m.id}
-              m={m}
-              reviews={reviewsFor(m.id)}
-              discussion={discussion}
-              onReviewPosted={(r) => setPosted((prev) => [...prev, r])}
-            />
+            <MilestoneCard key={m.id} m={m} />
           ))}
         </ul>
       </section>
-
     </Layout>
   );
 }
@@ -323,11 +190,8 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const proposal = loadTrackedProposals().find((p) => p.slug === params?.slug);
   if (!proposal) return { notFound: true, revalidate: 60 };
-  const reviews = proposal.proposal_issue
-    ? await fetchMilestoneReviews(RFP_REPO, proposal.proposal_issue)
-    : [];
   return {
-    props: { proposal: JSON.parse(JSON.stringify(proposal)), reviews },
-    revalidate: 60,
+    props: { proposal: JSON.parse(JSON.stringify(proposal)) },
+    revalidate: 300,
   };
 };

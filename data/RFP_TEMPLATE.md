@@ -39,37 +39,14 @@ real schedule overlaps milestones or was agreed with the applicant). A
 milestone past its (estimated or explicit) due date that isn't yet approved
 or paid shows an "Nd late" flag and marks the whole delivery Overdue.
 
-## Engineering reviews & discussion
+## Engineering reviews
 
-Milestone discussion lives **as comments on the proposal issue in
-logos-co/rfp** (`proposal_issue` above) — the same thread where the proposal
-was submitted. No separate tracking repo.
-
-There are two ways to comment — both produce the same GitHub comment:
-
-- **From the dashboard**: connect GitHub (top right, fine-grained token scoped
-  to logos-co/rfp with Issues read/write) and use the review box on any
-  milestone — **Approve**, **Request changes**, or plain **Comment**.
-- **From GitHub**: comment on the proposal issue directly.
-
-The first line of the comment determines how the dashboard reads it:
-
-| first line starts with | shown as |
-|---|---|
-| `M2: <text>` | discussion comment (anyone can join) |
-| `Review M2: <notes>` | review comment |
-| `Review M2 — Approved` (+ optional `: notes`) | **Approved** verdict badge |
-| `Review M2 — Changes requested: <notes>` | **Changes requested** verdict badge |
-
-Each milestone shows its comments as a chronological discussion thread.
-Commenters who are logos-co organization members get a `logos-co` badge
-(from GitHub's author association), so team voices are distinguishable from
-external ones.
-
-Comments refresh on the detail page every minute. The comment on GitHub is the
-canonical record; when engineering posts an Approved verdict, update the
-milestone's `status` to `approved` here and fill `reviewer` / `approved_date`
-— that is what moves it into the payout flow.
+Review discussion happens **on the proposal issue in logos-co/rfp**
+(`proposal_issue` above) — the dashboard links to it but does not mirror the
+thread. Allocate an engineering reviewer per milestone with its `reviewer`
+field. When engineering approves a milestone on GitHub, update the
+milestone's `status` to `approved` here and fill `approved_date` — that is
+what moves it into the payout flow.
 
 ---
 

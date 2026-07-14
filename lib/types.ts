@@ -112,19 +112,3 @@ export type OverallStatus =
   | "overdue"
   | "completed";
 
-// One entry in a milestone's discussion thread — an issue comment on the
-// proposal whose first line references the milestone:
-//   "Review M1: …"                        → review
-//   "Review M1 — Approved[: …]"           → review with verdict
-//   "Review M1 — Changes requested[: …]"  → review with verdict
-//   "M1: …"                               → plain discussion comment
-export interface MilestoneReview {
-  milestone: string; // "M1"
-  author: string;
-  body: string;
-  url: string;
-  created_at: string;
-  verdict: "approved" | "changes_requested" | null;
-  kind: "review" | "comment";
-  is_member: boolean; // author is a logos-co org member/owner
-}

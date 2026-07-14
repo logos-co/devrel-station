@@ -1,40 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# DevRel Station
 
-## Getting Started
+The developer relations hub for Logos. Home (`/`) is the station overview;
+each DevRel responsibility gets its own tab, added one at a time. Live today:
 
-First, run the development server:
+- **RFPs (`/rfps`)** — delivery tracking for accepted
+  [logos-co/rfp](https://github.com/logos-co/rfp) proposals: milestone
+  progress, engineering reviews, and finance payouts.
+- **Content Factory (`/content-factory`)** — collections of published
+  resources (e.g. a tutorial series on X), one markdown file per collection
+  listing its links. See
+  [`data/CONTENT_FACTORY_TEMPLATE.md`](data/CONTENT_FACTORY_TEMPLATE.md).
+- **Feedback (`/feedback`)** — every GitHub issue labeled `feedback` across
+  the logos-co org, fetched live. The on-page form (needs the Connect GitHub
+  token, scoped to include this repo) files new feedback as a
+  `feedback`-labeled issue in **this repository** (default
+  `logos-co/devrel-station`, override with `NEXT_PUBLIC_FEEDBACK_REPO`) — the
+  station gathers its own feedback. Triage happens on GitHub — comment,
+  relabel, close; the issue is the record.
+
+Every area follows the same pattern: **one markdown file per tracked item**
+in `data/<area>/`, with structured YAML frontmatter the dashboard reads.
+Editing a status field updates the boards; git history is the audit trail.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optionally set `GITHUB_TOKEN` in the environment to raise the GitHub API rate
+limit (everything works unauthenticated too).
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## RFP tracking — how it works
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+There are two data sources:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+1. **`data/rfps/*.md` — the source of truth for delivery tracking.**
+   One file per *accepted* proposal, with structured milestones in YAML
+   frontmatter. Proposal issues on GitHub are free-form and inconsistent, so we
+   normalise each accepted proposal into this format once, at acceptance time.
+   See [`data/RFP_TEMPLATE.md`](data/RFP_TEMPLATE.md) for the template and the status
+   workflow.
+2. **The GitHub API — engineering reviews, fetched live.** Any comment on the
+   proposal issue whose first line starts with `Review M1:` (or `M1 review:`)
+   is pulled in and shown under that milestone, refreshed every minute.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Pages
 
-## Learn More
+- **RFPs board (`/rfps`)** — stat tiles (active deliveries, milestones awaiting
+  engineering review, approved-but-unpaid amounts, paid vs committed), an
+  **Action needed** queue showing exactly who each item is waiting on
+  (engineering / DevRel / finance), and a table of all tracked deliveries.
+- **Delivery detail (`/rfps/<slug>`)** — per-milestone timeline with the
+  workflow strip (in progress → delivered → in review → approved → payout
+  requested → paid), payout amounts, engineering reviews, dates, and notes.
 
-To learn more about Next.js, take a look at the following resources:
+### Reviewing from the dashboard (engineering)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Every milestone has a **discussion thread**: all comments on the delivery's
+issue in the **tracking repo** whose first line references the milestone
+(`M1: …`, `Review M1: …`, `Review M1 — Approved`,
+`Review M1 — Changes requested: …`), shown chronologically. Commenters who
+are logos-co org members get a `logos-co` badge, so team voices are
+distinguishable from external ones.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The tracking repo (default `logos-co/rfp-tracking`, override with
+`NEXT_PUBLIC_TRACKING_REPO`) exists so discussion doesn't add noise to the
+public proposal threads in logos-co/rfp. One issue per accepted RFP; put its
+number in the tracking file's `tracking_issue` field. Deliveries without a
+`tracking_issue` fall back to their proposal issue.
 
-## Deploy on Vercel
+To take part without leaving the dashboard, click **Connect GitHub** (top
+right) and paste a
+[fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)
+scoped to **only `logos-co/rfp`** with **Issues: Read & write**. Each
+milestone then gets a compose box with three actions: **Approve**, **Request
+changes**, or plain **Comment**. Each posts an ordinary comment on the
+proposal issue under your own GitHub account and appears in the thread
+immediately. No database — the GitHub comment is the record.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The token is stored only in your browser's localStorage and is sent only to
+`api.github.com` — the dashboard has no backend and never sees it. Use a short
+expiry and revoke it any time; `disconnect` removes it from the browser.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### The workflow (who does what)
+
+| milestone status | meaning | next step is on |
+|---|---|---|
+| `not_started` / `in_progress` | applicant working | applicant |
+| `delivered` | deliverables submitted | engineering — start review |
+| `in_review` | review running | engineering — approve / feedback |
+| `approved` | engineering signed off | DevRel — request payout from finance |
+| `payout_requested` | finance asked to pay | finance |
+| `paid` | payout done | — |
+| `blocked` | stuck (explain in `notes`) | DevRel |
+
+Day-to-day, tracking an engagement means editing one YAML field: when
+engineering approves M2, change its `status: in_review` to `approved` (and fill
+`approved_date`); the board's action queue then reminds you to ask finance.
+
+### Adding a new delivery
+
+1. A proposal gets the `accepted` label in logos-co/rfp.
+2. Copy the template from `data/RFP_TEMPLATE.md` into
+   `data/rfps/RFP-0XX-short-name.md`.
+3. Transcribe the milestones from the proposal (title, payout, completion
+   criteria), agree due dates with the applicant, and fill them in.
+4. Commit. The file is the audit trail — status changes are git history.
+
+## Adding a new station area
+
+Follow the existing pattern: a `data/<area>/` directory + `*_TEMPLATE.md`, a
+loader in `lib/<area>.ts`, a page under `pages/<area>/`, an entry in `NAV` in
+`components/Layout.tsx`, and a summary card in `pages/index.tsx`.

@@ -1,26 +1,149 @@
 @import "tailwindcss";
 
+/* build.logos.co design language: off-white page, dark-green ink, solid
+   colored blocks with large radii, serif display headings, mono body. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --page: #f5f5ef;
+  --surface: #ebeadd;
+  --inset: rgba(21, 37, 33, 0.06);
+  --ink: #152521;
+  --ink-secondary: rgba(21, 37, 33, 0.72);
+  --ink-muted: rgba(21, 37, 33, 0.52);
+  --hairline: #d3d6d0;
+
+  --accent: #152521;
+  --yellow: #ffd328;
+  --meter-track: rgba(21, 37, 33, 0.12);
+  --meter-fill: #152521;
+
+  --display: "Times New Roman", Times, ui-serif, Georgia, serif;
+
+  --badge-neutral-bg: #dbddd7;
+  --badge-neutral-fg: #152521;
+  --badge-progress-bg: #c6ebf7;
+  --badge-progress-fg: #152521;
+  --badge-attention-bg: #ffd328;
+  --badge-attention-fg: #152521;
+  --badge-approved-bg: #5f797c;
+  --badge-approved-fg: #f5f5ef;
+  --badge-payout-bg: #a18863;
+  --badge-payout-fg: #152521;
+  --badge-good-bg: #152521;
+  --badge-good-fg: #f5f5ef;
+  --badge-critical-bg: #48373f;
+  --badge-critical-fg: #ffd328;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-inset: var(--inset);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-yellow: var(--yellow);
+  --font-sans: var(--font-fira-code), "Fira Code", ui-monospace, SFMono-Regular,
+    Menlo, Consolas, monospace;
+  --font-mono: var(--font-fira-code), "Fira Code", ui-monospace, SFMono-Regular,
+    Menlo, Consolas, monospace;
+  --font-ui: var(--font-public-sans), "Public Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--display);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-fira-code), "Fira Code", ui-monospace, monospace;
+}
+
+h1,
+h2 {
+  font-family: var(--display);
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.badge-neutral {
+  background: var(--badge-neutral-bg);
+  color: var(--badge-neutral-fg);
+}
+.badge-progress {
+  background: var(--badge-progress-bg);
+  color: var(--badge-progress-fg);
+}
+.badge-attention {
+  background: var(--badge-attention-bg);
+  color: var(--badge-attention-fg);
+}
+.badge-approved {
+  background: var(--badge-approved-bg);
+  color: var(--badge-approved-fg);
+}
+.badge-payout {
+  background: var(--badge-payout-bg);
+  color: var(--badge-payout-fg);
+}
+.badge-good {
+  background: var(--badge-good-bg);
+  color: var(--badge-good-fg);
+}
+.badge-critical {
+  background: var(--badge-critical-bg);
+  color: var(--badge-critical-fg);
+}
+
+/* Solid color blocks, build.logos.co style */
+.card {
+  background: var(--surface);
+  border-radius: 1rem;
+}
+.card-blue {
+  background: #c6ebf7;
+  color: #152521;
+}
+.card-tan {
+  background: #e2e0c9;
+  color: #152521;
+}
+.card-grey {
+  background: #dbddd7;
+  color: #152521;
+}
+.card-dark {
+  background: #152521;
+  color: #f5f5ef;
+}
+.card-dark .meter {
+  background: rgba(245, 245, 239, 0.2);
+}
+.card-dark .meter > div {
+  background: #f5f5ef;
+}
+
+.meter {
+  height: 6px;
+  width: 100%;
+  border-radius: 9999px;
+  background: var(--meter-track);
+  overflow: hidden;
+}
+.meter > div {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--meter-fill);
 }

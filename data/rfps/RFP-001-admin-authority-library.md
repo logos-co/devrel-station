@@ -13,7 +13,7 @@ milestones:
     payout: 875
     duration: 4-6 days
     status: in_progress
-    reviewer: james
+    reviewer: danisharora099
     deliverables: >
       #[require_admin] macro API design, AdminConfig account model, authority
       lifecycle documentation, draft PR opened to logos-co/spel
@@ -25,6 +25,7 @@ milestones:
     payout: 1750
     duration: 8-12 days
     status: not_started
+    reviewer: danisharora099
     deliverables: >
       #[require_admin] implemented in spel-framework-macros; supporting library
       crate with AdminConfig, initialize, transfer_admin, renounce_admin; PR
@@ -35,6 +36,7 @@ milestones:
     payout: 875
     duration: 4-6 days
     status: not_started
+    reviewer: danisharora099
     deliverables: >
       Full test suite, CI green, README covering annotation API and integration
       steps, transaction size overhead notes, doc packet(s) submitted to

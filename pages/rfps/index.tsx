@@ -80,7 +80,6 @@ export default function RfpsBoard({
                   <th className="px-3 py-3 font-medium">Paid</th>
                   <th className="px-3 py-3 font-medium">Budget</th>
                   <th className="px-3 py-3 font-medium">Next due</th>
-                  <th className="px-3 py-3 font-medium">Est. finish</th>
                   <th className="px-5 py-3 font-medium">Status</th>
                 </tr>
               </thead>
@@ -112,9 +111,6 @@ export default function RfpsBoard({
                     </td>
                     <td className="px-3 py-4 tabular-nums text-ink-secondary">
                       {formatDate(p.next_due)}
-                    </td>
-                    <td className="px-3 py-4 tabular-nums text-ink-secondary">
-                      {formatDate(p.estimated_finish)}
                     </td>
                     <td className="px-5 py-4">
                       <OverallBadge status={p.overall} />

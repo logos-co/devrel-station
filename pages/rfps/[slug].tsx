@@ -87,13 +87,18 @@ function MilestoneCard({
             {m.due_estimated ? "Est. due" : "Due"}: {formatDate(m.expected_due)}
           </span>
         )}
-        {m.reviewer && <span>Reviewer: {m.reviewer}</span>}
         {m.approved_date && <span>Approved: {formatDate(m.approved_date)}</span>}
         {m.payout_requested_date && (
           <span>Payout requested: {formatDate(m.payout_requested_date)}</span>
         )}
         {m.paid_date && <span>Paid: {formatDate(m.paid_date)}</span>}
       </div>
+
+      {m.reviewer && (
+        <div className="mt-1 text-xs text-ink-muted">
+          Reviewer: <span className="font-medium text-ink">{m.reviewer}</span>
+        </div>
+      )}
 
       {m.deliverables && (
         <details className="mt-3">

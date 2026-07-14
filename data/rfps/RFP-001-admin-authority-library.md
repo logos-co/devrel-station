@@ -13,6 +13,7 @@ milestones:
     payout: 875
     duration: 4-6 days
     status: in_progress
+    reviewer: james
     deliverables: >
       #[require_admin] macro API design, AdminConfig account model, authority
       lifecycle documentation, draft PR opened to logos-co/spel

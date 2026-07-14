@@ -83,20 +83,24 @@ export function GitHubConnect() {
       {open && (
         <div className="card absolute right-0 top-full z-10 mt-2 w-80 p-4">
           <p className="text-xs leading-relaxed text-ink-secondary">
-            Paste a{" "}
-            <a
-              href="https://github.com/settings/personal-access-tokens/new"
-              target="_blank"
-              rel="noreferrer"
-              className="text-accent hover:underline"
-            >
-              fine-grained personal access token ↗
-            </a>{" "}
-            scoped to <strong>{RFP_REPO}</strong> (milestone reviews) and{" "}
-            <strong>{FEEDBACK_REPO}</strong> (feedback) with{" "}
-            <strong>Issues: Read &amp; write</strong>. It is stored only in
-            this browser and sent only to api.github.com.
+            The token is stored only in this browser and sent only to
+            api.github.com.
           </p>
+          <a
+            href="https://github.com/settings/personal-access-tokens/new?name=devrel-station&target_name=logos-co"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 block rounded-lg bg-inset px-3 py-2 text-xs leading-relaxed text-ink-secondary hover:text-ink"
+          >
+            <span className="font-medium text-accent">
+              Generate a fine-grained PAT ↗
+            </span>
+            <br />
+            Repositories: <strong>{RFP_REPO}</strong>,{" "}
+            <strong>{FEEDBACK_REPO}</strong>
+            <br />
+            Permission: <strong>Issues — Read &amp; write</strong>
+          </a>
           <input
             type="password"
             value={value}

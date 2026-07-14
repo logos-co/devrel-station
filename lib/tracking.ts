@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { RFP_REPO, TRACKING_REPO } from "./config";
+import { RFP_REPO } from "./config";
 import type {
   Milestone,
   MilestoneStatus,
@@ -146,8 +146,6 @@ export function loadTrackedProposals(): TrackedProposal[] {
 
       const proposalIssue =
         data.proposal_issue !== undefined ? Number(data.proposal_issue) : undefined;
-      const trackingIssue =
-        data.tracking_issue !== undefined ? Number(data.tracking_issue) : undefined;
 
       const proposal: TrackedProposal = {
         slug,
@@ -158,10 +156,6 @@ export function loadTrackedProposals(): TrackedProposal[] {
         proposal_issue: proposalIssue,
         proposal_url: proposalIssue
           ? `https://github.com/${RFP_REPO}/issues/${proposalIssue}`
-          : undefined,
-        tracking_issue: trackingIssue,
-        tracking_url: trackingIssue
-          ? `https://github.com/${TRACKING_REPO}/issues/${trackingIssue}`
           : undefined,
         delivery_repo: asString(data.delivery_repo),
         accepted_date: asString(data.accepted_date),

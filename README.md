@@ -57,17 +57,12 @@ There are two data sources:
 ### Reviewing from the dashboard (engineering)
 
 Every milestone has a **discussion thread**: all comments on the delivery's
-issue in the **tracking repo** whose first line references the milestone
+**proposal issue in logos-co/rfp** whose first line references the milestone
 (`M1: …`, `Review M1: …`, `Review M1 — Approved`,
 `Review M1 — Changes requested: …`), shown chronologically. Commenters who
 are logos-co org members get a `logos-co` badge, so team voices are
-distinguishable from external ones.
-
-The tracking repo (default `logos-co/rfp-tracking`, override with
-`NEXT_PUBLIC_TRACKING_REPO`) exists so discussion doesn't add noise to the
-public proposal threads in logos-co/rfp. One issue per accepted RFP; put its
-number in the tracking file's `tracking_issue` field. Deliveries without a
-`tracking_issue` fall back to their proposal issue.
+distinguishable from external ones. There is no separate tracking repo —
+the proposal thread is the record, reviews included.
 
 To take part without leaving the dashboard, click **Connect GitHub** (top
 right) and paste a

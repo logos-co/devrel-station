@@ -1,11 +1,7 @@
-// The public repo where proposals are submitted (read-only for the dashboard).
+// The public repo where proposals are submitted. Its proposal issues also
+// host all milestone discussion and engineering approvals — the dashboard's
+// review box posts comments there.
 export const RFP_REPO = "logos-co/rfp";
-
-// The repo whose issues host milestone discussion threads — one issue per
-// accepted RFP, referenced by `tracking_issue` in data/rfps/*.md frontmatter.
-// Kept separate from RFP_REPO so proposal threads stay noise-free.
-export const TRACKING_REPO =
-  process.env.NEXT_PUBLIC_TRACKING_REPO ?? "logos-co/rfp-tracking";
 
 // Where dashboard-submitted community feedback lands, as issues labeled
 // `feedback` — this app's own repo. The board additionally shows

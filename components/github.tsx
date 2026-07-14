@@ -7,7 +7,7 @@ import {
   TOKEN_EVENT,
   type ReviewVerdict,
 } from "@/lib/githubClient";
-import { TRACKING_REPO } from "@/lib/config";
+import { FEEDBACK_REPO, RFP_REPO } from "@/lib/config";
 import type { MilestoneReview } from "@/lib/types";
 
 // Resolves to the connected GitHub user, or null. Re-checks whenever the
@@ -92,9 +92,10 @@ export function GitHubConnect() {
             >
               fine-grained personal access token ↗
             </a>{" "}
-            scoped to <strong>{TRACKING_REPO}</strong> (and logos-co/rfp for
-            older deliveries) with <strong>Issues: Read &amp; write</strong>.
-            It is stored only in this browser and sent only to api.github.com.
+            scoped to <strong>{RFP_REPO}</strong> (milestone reviews) and{" "}
+            <strong>{FEEDBACK_REPO}</strong> (feedback) with{" "}
+            <strong>Issues: Read &amp; write</strong>. It is stored only in
+            this browser and sent only to api.github.com.
           </p>
           <input
             type="password"

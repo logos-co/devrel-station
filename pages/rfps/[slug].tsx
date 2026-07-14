@@ -6,7 +6,7 @@ import { ReviewComposer, useGitHubUser } from "@/components/github";
 import { Meter, MilestoneBadge, OverallBadge } from "@/components/ui";
 import { loadTrackedProposals } from "@/lib/tracking";
 import { fetchMilestoneReviews } from "@/lib/github";
-import { RFP_REPO, TRACKING_REPO } from "@/lib/config";
+import { RFP_REPO } from "@/lib/config";
 import { formatDate, formatUsd } from "@/lib/status";
 import type { Milestone, MilestoneReview, TrackedProposal } from "@/lib/types";
 
@@ -151,10 +151,10 @@ function MilestoneCard({
                   rel="noreferrer"
                   className="text-accent hover:underline"
                 >
-                  comment on the tracking issue ↗
+                  comment on the proposal issue ↗
                 </a>
               ) : (
-                "comment on the tracking issue"
+                "comment on the proposal issue"
               )}{" "}
               starting with{" "}
               <code className="rounded bg-inset px-1 font-mono text-xs">
@@ -191,13 +191,10 @@ export default function RfpDetail({
     [...(reviews ?? []), ...posted].filter(
       (r) => r.milestone.toUpperCase() === id.toUpperCase(),
     );
-  // Discussion lives on the dedicated tracking issue; falls back to the
-  // proposal issue for deliveries that don't have one yet.
-  const discussion = p.tracking_issue
-    ? { repo: TRACKING_REPO, issue: p.tracking_issue, url: p.tracking_url! }
-    : p.proposal_issue
-      ? { repo: RFP_REPO, issue: p.proposal_issue, url: p.proposal_url! }
-      : null;
+  // Discussion and approvals live on the proposal issue in logos-co/rfp
+  const discussion = p.proposal_issue
+    ? { repo: RFP_REPO, issue: p.proposal_issue, url: p.proposal_url! }
+    : null;
   return (
     <Layout title={`${p.rfp} — ${p.title}`}>
       <Link href="/rfps" className="text-sm text-ink-muted hover:text-ink">
@@ -259,16 +256,6 @@ export default function RfpDetail({
                 className="text-accent hover:underline"
               >
                 Proposal #{p.proposal_issue} ↗
-              </a>
-            )}
-            {p.tracking_url && (
-              <a
-                href={p.tracking_url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-accent hover:underline"
-              >
-                Discussion #{p.tracking_issue} ↗
               </a>
             )}
             {p.delivery_repo && (
@@ -341,13 +328,9 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const proposal = loadTrackedProposals().find((p) => p.slug === params?.slug);
   if (!proposal) return { notFound: true, revalidate: 60 };
-  // Discussion threads live on the tracking-repo issue when one is set,
-  // otherwise on the original proposal issue.
-  const reviews = proposal.tracking_issue
-    ? await fetchMilestoneReviews(TRACKING_REPO, proposal.tracking_issue)
-    : proposal.proposal_issue
-      ? await fetchMilestoneReviews(RFP_REPO, proposal.proposal_issue)
-      : [];
+  const reviews = proposal.proposal_issue
+    ? await fetchMilestoneReviews(RFP_REPO, proposal.proposal_issue)
+    : [];
   return {
     props: { proposal: JSON.parse(JSON.stringify(proposal)), reviews },
     revalidate: 60,

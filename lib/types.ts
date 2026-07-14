@@ -40,12 +40,10 @@ export interface TrackedProposal {
   title: string;
   team: string;
   contact?: string;
+  // Issue in RFP_REPO — the proposal thread, which also hosts milestone
+  // discussion and engineering approvals.
   proposal_issue?: number;
   proposal_url?: string;
-  // Issue in the dedicated tracking repo hosting this delivery's milestone
-  // discussion. Falls back to the proposal issue when unset.
-  tracking_issue?: number;
-  tracking_url?: string;
   delivery_repo?: string;
   accepted_date?: string;
   start_date?: string;

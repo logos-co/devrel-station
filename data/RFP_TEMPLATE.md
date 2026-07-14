@@ -41,15 +41,9 @@ or paid shows an "Nd late" flag and marks the whole delivery Overdue.
 
 ## Engineering reviews & discussion
 
-Milestone discussion lives **as comments on the delivery's issue in the
-tracking repo** (`tracking_issue` above) — one issue per accepted RFP, kept
-separate from logos-co/rfp so proposal threads stay noise-free. When a
-delivery has no `tracking_issue` yet, the dashboard falls back to the
-proposal issue.
-
-Setup for a new delivery: open an issue in the tracking repo titled after the
-RFP (e.g. "RFP-003 — LEZ Atomic Swap Suite"), link the proposal in its body,
-and put its number in `tracking_issue`.
+Milestone discussion lives **as comments on the proposal issue in
+logos-co/rfp** (`proposal_issue` above) — the same thread where the proposal
+was submitted. No separate tracking repo.
 
 There are two ways to comment — both produce the same GitHub comment:
 
@@ -85,8 +79,7 @@ rfp: RFP-0XX
 title: Project name from the proposal
 team: Team or applicant name
 contact: handle (Discord), handle (Signal)
-proposal_issue: 123            # issue number in logos-co/rfp (the proposal)
-tracking_issue: 4              # issue number in the tracking repo (discussion)
+proposal_issue: 123            # issue number in logos-co/rfp (proposal + discussion)
 delivery_repo: https://github.com/team/repo   # where the work lands (optional)
 accepted_date: 2026-01-01
 start_date: 2026-01-06
